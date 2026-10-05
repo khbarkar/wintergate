@@ -1,0 +1,1046 @@
+<title>Twenty-Four Doors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..800,0..100,0..1;1,9..144,400..700,0..100,0..1&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+
+<style>
+:root{
+  --bg:#d9dde1;
+  --lid:#cbd1d6;
+  --surface:#f1f3f4;
+  --surface-2:#e6eaec;
+  --ink:#111820;
+  --ink-soft:#3b4651;
+  --muted:#5e6b77;
+  --line:#bcc4ca;
+  --line-soft:#ccd3d8;
+  --brass:#8a6618;
+  --brass-soft:#a8832f;
+  --norse:#2f6b77;
+  --nights:#9c6a0d;
+  --fairy:#7a4070;
+  --animal:#4f6d2c;
+  --ok:#2f6b4a;
+  --warn:#9a5a12;
+  --crit:#9c3b2e;
+  --shadow:0 1px 0 rgba(255,255,255,.6), 0 10px 24px -14px rgba(16,24,32,.45);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f151c;
+    --lid:#131b23;
+    --surface:#18212b;
+    --surface-2:#1e2833;
+    --ink:#e7ecf0;
+    --ink-soft:#c3ccd4;
+    --muted:#93a1ad;
+    --line:#2b3642;
+    --line-soft:#232d38;
+    --brass:#cb9f44;
+    --brass-soft:#a9842f;
+    --norse:#67b3bf;
+    --nights:#e0ab3c;
+    --fairy:#bd86b3;
+    --animal:#8fb45c;
+    --ok:#6cc08d;
+    --warn:#e0ab3c;
+    --crit:#e58a78;
+    --shadow:0 1px 0 rgba(255,255,255,.04), 0 14px 30px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f151c;
+  --lid:#131b23;
+  --surface:#18212b;
+  --surface-2:#1e2833;
+  --ink:#e7ecf0;
+  --ink-soft:#c3ccd4;
+  --muted:#93a1ad;
+  --line:#2b3642;
+  --line-soft:#232d38;
+  --brass:#cb9f44;
+  --brass-soft:#a9842f;
+  --norse:#67b3bf;
+  --nights:#e0ab3c;
+  --fairy:#bd86b3;
+  --animal:#8fb45c;
+  --ok:#6cc08d;
+  --warn:#e0ab3c;
+  --crit:#e58a78;
+  --shadow:0 1px 0 rgba(255,255,255,.04), 0 14px 30px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Spectral,Georgia,"Times New Roman",serif;
+  font-size:17px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{
+  font-family:Fraunces,Georgia,serif;
+  font-variation-settings:"SOFT" 30,"WONK" 1;
+  text-wrap:balance;
+  margin:0;
+  line-height:1.1;
+}
+.mono,code,kbd,th,.plate,.eyebrow,.chip,.num{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+code{
+  font-size:.86em;
+  background:var(--surface-2);
+  border:1px solid var(--line-soft);
+  border-radius:3px;
+  padding:.1em .34em;
+}
+kbd{
+  font-size:.8em;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-bottom-width:2px;
+  border-radius:4px;
+  padding:.12em .42em;
+  color:var(--ink);
+}
+a{color:var(--brass);text-decoration-thickness:1px;text-underline-offset:2px}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- shell ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+.eyebrow{
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* ---------- top bar ---------- */
+.bar{
+  position:sticky;top:0;z-index:40;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.bar-in{display:flex;align-items:center;gap:18px;min-height:52px;flex-wrap:wrap}
+.bar-mark{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:15px;letter-spacing:.01em;white-space:nowrap}
+.bar-mark span{color:var(--brass)}
+.bar nav{display:flex;gap:2px;flex-wrap:wrap;margin-left:auto}
+.bar nav a{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  padding:6px 9px;border-radius:4px;
+}
+.bar nav a:hover{color:var(--ink);background:var(--surface-2)}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(40px,7vw,78px) 0 10px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,64px);align-items:start}
+@media (max-width:880px){.hero-grid{grid-template-columns:1fr}}
+h1{
+  font-size:clamp(44px,8.5vw,92px);
+  font-weight:700;
+  font-variation-settings:"SOFT" 18,"WONK" 1,"opsz" 120;
+  letter-spacing:-.02em;
+  margin:.18em 0 .3em;
+}
+h1 em{font-style:normal;color:var(--brass);display:block}
+.lede{font-size:clamp(18px,2.1vw,21px);color:var(--ink-soft);max-width:34ch}
+.lede strong{font-weight:600;color:var(--ink)}
+.facts{
+  margin-top:26px;border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+}
+.facts div{padding:12px 14px 12px 0;border-bottom:1px solid var(--line-soft)}
+.facts dt{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:3px 0 0;font-size:15px}
+
+/* ---------- calendar lid ---------- */
+.lid{
+  background:var(--lid);
+  border:1px solid var(--line);
+  border-radius:4px;
+  padding:clamp(14px,2.5vw,22px);
+  box-shadow:var(--shadow);
+}
+.lid-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
+.lid-head h2{font-size:15px;font-weight:600;letter-spacing:.01em}
+.doors{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+@media (max-width:1000px){.doors{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:420px){.doors{grid-template-columns:repeat(3,1fr)}}
+.door{
+  position:relative;
+  aspect-ratio:3/4;
+  border:1px solid var(--line);
+  border-radius:3px;
+  background:var(--surface);
+  color:var(--ink);
+  cursor:pointer;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:7px 8px;
+  text-align:left;
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.door:hover{transform:translateY(-2px);box-shadow:0 8px 16px -10px rgba(0,0,0,.5);border-color:var(--brass-soft)}
+.door::before{
+  content:"";position:absolute;inset:0 auto 0 0;width:3px;
+  background:var(--w);border-radius:3px 0 0 3px;
+}
+.door .num{font-size:17px;font-weight:500;letter-spacing:-.02em;color:var(--w)}
+.door .tag{font-family:"IBM Plex Mono",monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);line-height:1.3}
+.door[aria-pressed="true"]{background:var(--surface-2);border-color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass-soft)}
+.door[data-fin]::after{
+  content:"★";position:absolute;right:6px;top:5px;font-size:9px;color:var(--brass-soft)
+}
+.reveal{
+  margin-top:14px;border-top:1px solid var(--line);padding-top:14px;
+  min-height:122px;
+}
+.reveal .world{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--w,var(--muted))}
+.reveal h3{font-size:22px;margin:4px 0 6px}
+.reveal p{margin:0;color:var(--ink-soft);font-size:15.5px}
+.reveal .meta{margin-top:9px;display:flex;gap:8px;flex-wrap:wrap}
+.chip{
+  font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:999px;padding:3px 8px;color:var(--muted);
+  background:var(--surface);
+}
+.chip b{color:var(--ink);font-weight:500}
+
+/* ---------- sections ---------- */
+section{padding:clamp(48px,7vw,86px) 0;border-top:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:72px minmax(0,1fr);gap:clamp(14px,3vw,30px);align-items:start;margin-bottom:30px}
+.sec-head .plate{
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);
+  border-top:2px solid var(--brass);padding-top:7px;
+}
+.sec-head h2{font-size:clamp(28px,4.4vw,42px);font-weight:600;letter-spacing:-.015em}
+.sec-head p{margin:.5em 0 0;color:var(--ink-soft);max-width:62ch}
+.body{display:grid;grid-template-columns:72px minmax(0,1fr);gap:clamp(14px,3vw,30px)}
+.body > .col{min-width:0}
+@media (max-width:760px){
+  .sec-head,.body{grid-template-columns:1fr}
+  .sec-head .plate{border-top:none;border-left:2px solid var(--brass);padding:0 0 0 10px}
+}
+.prose{max-width:68ch}
+.prose p{margin:0 0 1.05em}
+.prose h3{font-size:21px;font-weight:600;margin:1.9em 0 .5em}
+.prose h4{font-size:16px;font-weight:600;margin:1.5em 0 .35em;font-variation-settings:"SOFT" 40,"WONK" 0}
+.prose ul,.prose ol{margin:0 0 1.1em;padding-left:1.2em}
+.prose li{margin:.3em 0}
+.prose li::marker{color:var(--brass-soft)}
+
+/* cards + tables */
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin:0 0 20px}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:15px 16px;
+}
+.card .world-dot{width:9px;height:9px;border-radius:2px;background:var(--w);display:inline-block;margin-right:7px;vertical-align:middle}
+.card h4{margin:0 0 4px;font-size:16px;font-family:Fraunces,serif;font-weight:600}
+.card p{margin:0;font-size:14.5px;color:var(--ink-soft);line-height:1.5}
+.card .k{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px}
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:4px;margin:0 0 22px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px}
+th{
+  text-align:left;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;
+  color:var(--muted);padding:9px 14px;border-bottom:1px solid var(--line);background:var(--surface-2);
+  white-space:nowrap;
+}
+td{padding:9px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.n{font-variant-numeric:tabular-nums;font-family:"IBM Plex Mono",monospace;font-size:13px;white-space:nowrap}
+td b{font-weight:600}
+.pill{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid currentColor}
+.pill.pick{color:var(--ok)}
+.pill.no{color:var(--crit)}
+.pill.maybe{color:var(--warn)}
+
+.callout{
+  border-left:2px solid var(--brass);background:var(--surface);
+  padding:14px 16px;margin:0 0 22px;border-radius:0 4px 4px 0;
+}
+.callout p{margin:0;font-size:15px;color:var(--ink-soft)}
+.callout p + p{margin-top:.7em}
+.callout b{color:var(--ink)}
+
+pre{
+  margin:0 0 22px;padding:14px 16px;overflow-x:auto;
+  background:var(--surface);border:1px solid var(--line);border-radius:4px;
+  font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.65;color:var(--ink-soft);
+}
+pre b{color:var(--ink);font-weight:500}
+pre .c{color:var(--muted)}
+
+/* ---------- swatches ---------- */
+.swatches{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:22px}
+.sw{border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--surface)}
+.sw .strip{height:44px;display:flex}
+.sw .strip i{flex:1}
+.sw .lab{padding:9px 11px;font-size:13px}
+.sw .lab b{display:block;font-family:Fraunces,serif;font-size:14px;font-weight:600}
+.sw .lab span{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted);letter-spacing:.04em}
+
+/* ---------- diorama svg ---------- */
+figure{margin:0 0 22px}
+figure svg{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:4px}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px;max-width:60ch}
+
+/* ---------- puzzle demo ---------- */
+.demo{
+  background:var(--surface);border:1px solid var(--line);border-radius:4px;
+  padding:clamp(14px,2.4vw,22px);margin:0 0 22px;
+}
+.demo-top{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+.demo-top h4{margin:0;font-size:18px;font-family:Fraunces,serif;font-weight:600}
+.demo-top .mono{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.rules{
+  list-style:none;margin:12px 0 18px;padding:0;
+  display:grid;gap:5px;font-size:13.5px;color:var(--ink-soft);
+}
+.rules li{display:grid;grid-template-columns:18px 1fr;gap:6px}
+.rules li i{font-family:"IBM Plex Mono",monospace;font-style:normal;color:var(--brass-soft);font-size:11px;padding-top:2px}
+.things{display:grid;gap:10px;grid-template-columns:repeat(4,1fr)}
+@media (max-width:620px){.things{grid-template-columns:repeat(2,1fr)}}
+.thing{
+  border:1px solid var(--line);border-radius:4px;background:var(--surface-2);
+  padding:11px;display:flex;flex-direction:column;gap:8px;min-height:124px;
+}
+.thing.target{border-color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass-soft)}
+.thing .name{font-family:Fraunces,serif;font-size:15px;font-weight:600;line-height:1.2}
+.thing .note{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:-5px}
+.slot{
+  margin-top:auto;min-height:34px;border:1px dashed var(--line);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+}
+.slot.open{border-color:var(--brass-soft);background:color-mix(in srgb,var(--brass) 8%,transparent)}
+.prop{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+  border:1px solid currentColor;border-radius:999px;padding:4px 11px;background:transparent;
+  cursor:pointer;
+}
+.prop.p-LOUD{color:var(--crit)}
+.prop.p-FLIGHT{color:var(--norse)}
+.prop.p-HEAVY{color:var(--fairy)}
+.prop[aria-pressed="true"]{background:currentColor;color:var(--surface);box-shadow:0 0 0 2px var(--brass)}
+.prop[aria-pressed="true"] span{color:var(--ink)}
+.slot button.place{
+  all:unset;cursor:pointer;width:100%;height:100%;min-height:32px;
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--brass);display:flex;align-items:center;justify-content:center;
+}
+.hasp{
+  margin-top:16px;border-top:1px solid var(--line);padding-top:12px;
+  display:flex;gap:11px;align-items:flex-start;
+}
+.hasp .icon{
+  flex:none;width:26px;height:26px;border-radius:3px;border:1px solid var(--brass-soft);
+  color:var(--brass);display:grid;place-items:center;font-size:13px;
+}
+.hasp .say{font-size:14.5px;color:var(--ink-soft);font-style:italic;margin:0;min-height:2.9em}
+.hasp .say.win{color:var(--ok);font-style:normal}
+.demo-foot{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.btn{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--surface-2);color:var(--ink);border:1px solid var(--line);
+  border-radius:3px;padding:7px 13px;cursor:pointer;
+}
+.btn:hover{border-color:var(--brass-soft);color:var(--brass)}
+.moves{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);letter-spacing:.07em;margin-left:auto}
+
+footer{border-top:1px solid var(--line);padding:30px 0 50px;color:var(--muted);font-size:13.5px}
+footer p{margin:0 0 .5em;max-width:68ch}
+</style>
+
+<div class="bar">
+  <div class="wrap bar-in">
+    <div class="bar-mark">Twenty-Four <span>Doors</span></div>
+    <nav>
+      <a href="#hook">Mechanic</a>
+      <a href="#puzzles">Puzzles</a>
+      <a href="#story">Story</a>
+      <a href="#art">Artwork</a>
+      <a href="#language">Language</a>
+      <a href="#tooling">Tooling</a>
+      <a href="#gating">Gating &amp; cheats</a>
+      <a href="#scope">Scope</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Concept bible · draft 1 · October 2026</div>
+      <h1>Twenty-Four<em>Doors</em></h1>
+      <p class="lede">An advent calendar of <strong>24 logic dioramas</strong>. Norse myth, 1001 Nights, fairy tales, the animal kingdom — one door a day, each one a self-contained puzzle adventure. Solve today to open tomorrow.</p>
+      <dl class="facts">
+        <div><dt>Platforms</dt><dd>PC + Mac first, Quest after</dd></div>
+        <div><dt>One verb</dt><dd>Borrow &amp; Lend</dd></div>
+        <div><dt>Rating target</dt><dd>PEGI 12 / ESRB T</dd></div>
+        <div><dt>Per door</dt><dd>45–90 min core</dd></div>
+        <div><dt>Full set</dt><dd>~30 h, ~55 h completionist</dd></div>
+        <div><dt>Narrator</dt><dd>Hasp, a unionised lock</dd></div>
+      </dl>
+      <p class="prose" style="margin-top:22px;color:var(--muted);font-size:14.5px">Title alternates if <i>Twenty-Four Doors</i> is taken on Steam: <b style="color:var(--ink);font-weight:500">The Borrowed Calendar</b>, <b style="color:var(--ink);font-weight:500">Knock Twice</b>, <b style="color:var(--ink);font-weight:500">Hasp &amp; Key</b>.</p>
+    </div>
+
+    <div class="lid">
+      <div class="lid-head">
+        <h2>The lid</h2>
+        <div class="eyebrow">Click a door</div>
+      </div>
+      <div class="doors" id="doors"></div>
+      <div class="reveal" id="reveal"></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============ MECHANIC ============ -->
+<section id="hook">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="plate">01 / Mechanic</div>
+      <div>
+        <h2>One verb, twenty-four doors</h2>
+        <p>Portal's real trick was not portals — it was that the whole game ran on a single verb a player understood in ten seconds, then spent eight hours discovering. This needs the same shape, and it cannot be portals.</p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="plate eyebrow">Borrow<br>&amp; Lend</div>
+      <div class="col prose">
+        <p>Everything in a diorama carries visible <b>properties</b> — small brass-tagged words clipped to the object: <code>HEAVY</code>, <code>LOUD</code>, <code>FLIGHT</code>, <code>SHARP</code>, <code>SWEET</code>, <code>YOUNGEST</code>, <code>ASLEEP</code>, <code>GOLDEN</code>, <code>FIRST</code>.</p>
+        <p>You cannot command anything. You can only <b>borrow</b> one property off a thing and <b>lend</b> it to another. Objects hold a limited number of properties, the world obeys them literally and instantly, and nothing else in the diorama changes unless the properties say it does.</p>
+        <p>Lend <code>SWEET</code> to a boulder and the bear hauls the boulder to its hoard. Borrow <code>ASLEEP</code> from a guard and the guard is awake — and something else is now sleeping. Borrow <code>YOUNGEST</code> from the third brother and the fairy-tale rule "the youngest always wins" picks someone new.</p>
+        <p>Why it carries 24 days: the puzzle space is combinatorial, not content-hungry. Authoring a door means picking six objects, nine properties and four rules, not building a new mechanic. And a verb that is <i>pick up a word, put it somewhere else</i> maps to a mouse click and to a VR hand with no redesign — which is the whole Quest port.</p>
+
+        <h3>One twist per world</h3>
+        <p>The verb never changes. What changes is the system that <i>reads</i> the properties — so each world feels like a different game while sharing every line of code.</p>
+        <div class="cards">
+          <div class="card" style="--w:var(--norse)">
+            <span class="k"><i class="world-dot"></i>Norse · Prophecy</span>
+            <h4>The Prophecy Board</h4>
+            <p>A carved prophecy is posted and <i>must come true, to the letter</i>. You rearrange properties until the literal words are satisfied. Constraint satisfaction with a weather system.</p>
+          </div>
+          <div class="card" style="--w:var(--nights)">
+            <span class="k"><i class="world-dot"></i>1001 Nights · Wishes</span>
+            <h4>Three Wishes</h4>
+            <p>Wishes are granted with malicious literalism. Each wish permanently welds a property to a thing — irreversible moves in an otherwise undoable game. Spend them wrong, restart the beat.</p>
+          </div>
+          <div class="card" style="--w:var(--fairy)">
+            <span class="k"><i class="world-dot"></i>Fairy tales · Rules</span>
+            <h4>The Posted Rule</h4>
+            <p>Every tale has one law the world enforces mechanically: <i>the youngest always wins</i>, <i>never eat at a stranger's table</i>, <i>three tries, then it's over</i>. You don't break the law. You change who it points at.</p>
+          </div>
+          <div class="card" style="--w:var(--animal)">
+            <span class="k"><i class="world-dot"></i>Animal kingdom · Instinct</span>
+            <h4>Instinct Scripts</h4>
+            <p>Animals run short visible loops — <i>hunt, hoard, migrate, imitate</i>. You can't give orders, only edit what the loop sees. The only world with live agents moving while you think.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <p><b>Rotation, not blocks.</b> Doors cycle Norse → Nights → Fairy tale → Animal, so every day feels like a new world and nobody gets six days of snow. Each world's six doors still form an arc, and doors 21–24 braid all four together.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PUZZLES ============ -->
+<section id="puzzles">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="plate">02 / Puzzles</div>
+      <div>
+        <h2>Logic you can read off the table</h2>
+        <p>No systems to learn, no tutorials to sit through, no twitch. Every door states its rules on a wooden sign and then expects you to think. Here is the first beat of Door 1 — playable.</p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="plate eyebrow">Try it</div>
+      <div class="col">
+
+        <div class="demo">
+          <div class="demo-top">
+            <h4>Door 1, beat 1 — Ratatoskr's delivery</h4>
+            <div class="mono">Minimum moves: 3</div>
+          </div>
+          <p style="margin:2px 0 0;font-size:14.5px;color:var(--ink-soft)">Get the <b>Rude Note</b> airborne so the squirrel can run it up the world-ash. Click a property to pick it up, click an empty slot to lend it.</p>
+          <ul class="rules">
+            <li><i>R1</i><span>The Note climbs only if it holds <code>FLIGHT</code>.</span></li>
+            <li><i>R2</i><span>Nothing holding <code>LOUD</code> may rest on the Mushroom — the guard sleeps against it.</span></li>
+            <li><i>R3</i><span>The Feather cannot hold <code>LOUD</code>. Too light to carry a voice.</span></li>
+            <li><i>R4</i><span>Each thing holds one property. Borrowing leaves the lender empty.</span></li>
+          </ul>
+          <div class="things" id="things"></div>
+          <div class="hasp">
+            <div class="icon mono">⌸</div>
+            <p class="say" id="say">Hasp, Senior Door, forty years' service. Move the words around. I'll tell you when you've embarrassed yourself.</p>
+          </div>
+          <div class="demo-foot">
+            <button class="btn" id="reset">Reset beat</button>
+            <button class="btn" id="hint">Ask Hasp</button>
+            <span class="moves" id="moves">Moves: 0</span>
+          </div>
+        </div>
+
+        <div class="prose">
+          <h3>The seven authoring rules</h3>
+          <ol>
+            <li><b>One verb per game, one twist per world.</b> If a door needs a new mechanic explained, it is the wrong door.</li>
+            <li><b>All information is visible.</b> No hidden state, no pixel hunting, no "you had to try it to know". A player with a notebook must be able to solve it away from the screen.</li>
+            <li><b>No timing, no reflexes, no precision.</b> Mandatory for VR parity and for 11-year-olds.</li>
+            <li><b>Never pun-locked.</b> A puzzle may be funny in English; it may never be <i>solvable</i> only in English. Non-negotiable for localisation.</li>
+            <li><b>Four to six beats per door</b>, each 8–15 minutes, each introducing exactly one new property or rule, with a 10-minute finale that uses all of them at once.</li>
+            <li><b>Undo everything</b> except wishes. Failure should cost ten seconds, so experimentation is the cheapest way to think.</li>
+            <li><b>One optional ★ beat per door</b> (the "gilt" puzzle) for people who want the hard version. Never gates the next day.</li>
+          </ol>
+
+          <h3>The hint ladder — load-bearing, not a nicety</h3>
+          <p>A calendar where day 12 blocks day 13 makes every hard-walled player a refund and a one-star review. Hasp is the pressure valve, and the sass makes taking help feel like a scene rather than a defeat.</p>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Stuck for</th><th>Hasp offers</th><th>Wording</th></tr></thead>
+              <tbody>
+                <tr><td class="n">4 min</td><td>Re-reads the rule you're violating</td><td>"Rule two. I'll wait."</td></tr>
+                <tr><td class="n">8 min</td><td>Names the object to touch next</td><td>"The acorn. Have you considered the acorn."</td></tr>
+                <tr><td class="n">14 min</td><td>Shows the next single move</td><td>"Watch my hands."</td></tr>
+                <tr><td class="n">20 min</td><td>Solves the beat, logs an achievement</td><td>"Filed under <i>Assisted</i>. No judgement. Some judgement."</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Every door is machine-verified</h3>
+          <p>Property puzzles are a finite state graph, so solvability is not a playtest question — it is a build step. The editor tool runs breadth-first search over the whole state space of each beat and fails the build if anything is off.</p>
+<pre><span class="c">// DoorValidator — runs on every save and in CI</span>
+<b>assert</b> solutions.count &gt; 0            <span class="c">// is it solvable at all</span>
+<b>assert</b> minMoves &gt;= 3 && minMoves &lt;= 9  <span class="c">// is it worth solving</span>
+<b>assert</b> uniqueSolutionPaths &lt;= 4        <span class="c">// not brute-forceable</span>
+<b>assert</b> deadEndStates == 0              <span class="c">// no unwinnable state without undo</span>
+<b>assert</b> newPropertiesIntroduced == 1    <span class="c">// one idea per beat</span>
+<b>report</b> beatDifficulty = log2(stateSpace) / minMoves</pre>
+          <p>That last line gives you a comparable difficulty number for all 96 beats, which is how you build a curve across 24 days instead of guessing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STORY ============ -->
+<section id="story">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="plate">03 / Story</div>
+      <div>
+        <h2>The Department of Unfinished Stories</h2>
+        <p>Four unrelated mythologies need one frame that earns the mixing and licenses the jokes. A bureaucracy is that frame — and it is funnier than a wizard.</p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="plate eyebrow">Frame</div>
+      <div class="col prose">
+        <p>Stories that lose their endings get filed. Somewhere behind the world there is a department that holds them — twenty-four drawers, each with a story stuck mid-sentence because its internal logic broke. Thor's hammer is missing and the prophecy that was meant to recover it no longer parses. A djinn granted a wish that contradicts itself and the paperwork is still smouldering. A wolf has been served an eviction notice by three pigs with a permit.</p>
+        <p>You are the new <b>Keyholder</b>, hired on a seasonal contract, 24 days. Your job is not to be a hero. Your job is to make each story logically consistent again so it can be refiled, which mostly means moving properties around until the prophecy is technically true and nobody can sue.</p>
+
+        <h3>Hasp</h3>
+        <p>Your only colleague is the brass hasp on the calendar lid. Forty years of service, extremely qualified, deeply unimpressed. He is Portal-shaped — disembodied, constant, funnier than you — but where GLaDOS was a scientist who wanted to kill you, Hasp is a civil servant who wants to go home. He comments on your logic, your taste, your shortcuts, and files grievances about your working hours.</p>
+        <div class="callout">
+          <p><b>Hasp, on the cheat code:</b> "You typed the skeleton key. In front of me. I have been a lock for four decades and you did that in front of me. No, go ahead. Door's open. We'll discuss it in my review."</p>
+          <p><b>Hasp, on Door 9:</b> "The gods bound the wolf with the sound of a cat's footfall and the beard of a woman. Procurement was a nightmare. Receipts, somehow, are fine."</p>
+        </div>
+
+        <h3>Door 1 beat sheet — Ratatoskr Delivers</h3>
+        <p>The tutorial door. Norse, 40 minutes, teaches the one verb and nothing else. Ratatoskr the squirrel carries insults up and down the world-ash between an eagle at the top and a dragon at the roots, which is a courier job, which means it is a logistics puzzle.</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Beat</th><th>Teaches</th><th>Situation</th><th>Min.</th></tr></thead>
+            <tbody>
+              <tr><td class="n">1</td><td>Borrow &amp; Lend</td><td>The Note is <code>LOUD</code> and must become <code>FLIGHT</code>. A sleeping guard, a feather that can't take a voice, one empty mushroom. <b>Playable above.</b></td><td class="n">8</td></tr>
+              <tr><td class="n">2</td><td>Properties have consequences</td><td>The eagle will only read mail that is <code>GOLDEN</code>. The only gold in the diorama is holding a bridge up.</td><td class="n">10</td></tr>
+              <tr><td class="n">3</td><td>Agents read properties</td><td>The dragon eats anything <code>SWEET</code>. The insult must pass the dragon. The insult is, unfortunately, very sweet once translated.</td><td class="n">12</td></tr>
+              <tr><td class="n">4</td><td>The Prophecy Board</td><td>A carving says "the smallest shall speak last". Ratatoskr is not currently the smallest, and he very much wants the last word.</td><td class="n">14</td></tr>
+              <tr><td class="n">★</td><td>Optional gilt beat</td><td>Deliver both messages in one trip, with the bridge still standing and the dragon still asleep.</td><td class="n">15</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Where it ends</h3>
+        <p>Door 24 is the only door with every world's cast in one diorama: an audit. All four systems run at once — a prophecy, a wish, a posted rule, and four live instinct loops — and the department's actual secret is that the stories were never filed by accident. Two to three hours, no new mechanics, every property you have met since Door 1. Hasp gets a chair.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ARTWORK ============ -->
+<section id="art">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="plate">04 / Artwork</div>
+      <div>
+        <h2>Storybook dioramas in a brass box</h2>
+        <p>Four worlds in one game is an art budget disaster unless the framing device does the heavy lifting. The framing device: every door opens into a small lit stage you look <i>into</i>, never walk through.</p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="plate eyebrow">Direction</div>
+      <div class="col prose">
+        <p><b>Diorama-first</b> solves four problems at once. Levels are small, so one artist can finish a world. Lighting is baked, so Quest holds 72 fps. The camera is outside the scene, so VR needs no locomotion and earns a <i>Comfortable</i> rating. And the player is a giant reaching into a toy theatre, which is the single most-screenshotted thing you can put in a trailer.</p>
+
+        <figure>
+          <svg viewBox="0 0 760 300" role="img" aria-label="Cross-section of a diorama box: the player sits outside, reaching in; the stage holds foreground, midground and painted backdrop layers.">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="currentColor" stop-opacity=".1"/>
+                <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <g fill="none" stroke="currentColor" stroke-width="1.25" color="var(--ink)">
+              <!-- box -->
+              <rect x="210" y="40" width="430" height="215" rx="3" stroke="var(--brass)"/>
+              <rect x="232" y="58" width="386" height="179" rx="2" stroke="var(--line)" fill="url(#g1)"/>
+              <!-- backdrop -->
+              <path d="M250 200 L300 140 L340 180 L390 120 L440 185 L500 135 L560 200" stroke="var(--norse)" stroke-width="1.5"/>
+              <!-- midground -->
+              <rect x="300" y="182" width="36" height="30" stroke="var(--line)"/>
+              <circle cx="470" cy="196" r="14" stroke="var(--line)"/>
+              <!-- stage floor -->
+              <line x1="250" y1="212" x2="600" y2="212" stroke="var(--line)"/>
+              <!-- props -->
+              <rect x="372" y="196" width="22" height="16" stroke="var(--nights)" stroke-width="1.5"/>
+              <circle cx="528" cy="204" r="8" stroke="var(--animal)" stroke-width="1.5"/>
+              <!-- hand reaching in -->
+              <path d="M70 150 C120 150 150 128 186 128 L240 128" stroke="var(--brass)" stroke-width="1.5"/>
+              <path d="M240 128 l-14 -8 M240 128 l-14 8" stroke="var(--brass)" stroke-width="1.5"/>
+              <!-- viewer -->
+              <circle cx="60" cy="150" r="15" stroke="var(--ink)"/>
+              <path d="M60 165 L60 205 M40 220 L60 205 L80 220" stroke="var(--ink)"/>
+            </g>
+            <g font-family="IBM Plex Mono, monospace" font-size="9.5" letter-spacing="1" fill="var(--muted)">
+              <text x="30" y="246">PLAYER · OUTSIDE</text>
+              <text x="118" y="118">BORROW / LEND</text>
+              <text x="252" y="80">PAINTED BACKDROP · 2 LAYERS</text>
+              <text x="252" y="232">STAGE · 60–90k TRIS · BAKED</text>
+              <text x="560" y="34" text-anchor="end" fill="var(--brass)">THE BOX · PERSISTENT FRAME</text>
+            </g>
+          </svg>
+          <figcaption>The same scene graph serves both platforms: on PC it is an orbit-and-click camera, in VR the box sits on a real table at 1:6 scale and your hands are the cursor. No second level design pass.</figcaption>
+        </figure>
+
+        <h4>Style target</h4>
+        <ul>
+          <li><b>Stylised low-poly with hand-painted texture.</b> Readable silhouettes over detail — a property tag must be legible at 1 m in a Quest headset.</li>
+          <li><b>Carved-wood and brass vernacular</b> for everything the player touches (property tags, the Prophecy Board, Hasp), so the interface belongs to the box rather than floating over it.</li>
+          <li><b>Baked AO plus one warm key light per diorama.</b> No real-time shadows, no post stack beyond colour grade and a soft vignette.</li>
+          <li><b>Palette does the world-building</b>, not geometry: a shared prop kit is retextured per world, which is how 24 dioramas fit a two-artist team.</li>
+        </ul>
+
+        <div class="swatches">
+          <div class="sw"><div class="strip"><i style="background:#2f4f58"></i><i style="background:#7fa8ae"></i><i style="background:#d7d2c4"></i><i style="background:#8fd0c4"></i></div><div class="lab"><b>Norse</b><span>slate · bone · aurora</span></div></div>
+          <div class="sw"><div class="strip"><i style="background:#1f2a5a"></i><i style="background:#9c6a0d"></i><i style="background:#e8b84b"></i><i style="background:#c75b3c"></i></div><div class="lab"><b>1001 Nights</b><span>indigo · brass · saffron</span></div></div>
+          <div class="sw"><div class="strip"><i style="background:#2f3d2a"></i><i style="background:#7a4070"></i><i style="background:#c9a24a"></i><i style="background:#e0d6c2"></i></div><div class="lab"><b>Fairy tales</b><span>moss · plum · candle</span></div></div>
+          <div class="sw"><div class="strip"><i style="background:#5a4328"></i><i style="background:#8fb45c"></i><i style="background:#c98a3c"></i><i style="background:#eadfc8"></i></div><div class="lab"><b>Animal kingdom</b><span>clay · leaf · ochre</span></div></div>
+        </div>
+
+        <h4>Asset budget per door</h4>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Item</th><th>New per door</th><th>Reused</th></tr></thead>
+            <tbody>
+              <tr><td>Hero props (puzzle objects)</td><td class="n">6–9</td><td>Property tags, slots, box frame</td></tr>
+              <tr><td>Set dressing</td><td class="n">0–4</td><td>World kit, ~40 pieces each</td></tr>
+              <tr><td>Characters</td><td class="n">1–3</td><td>Two rigs: biped, quadruped</td></tr>
+              <tr><td>Animation clips</td><td class="n">8–14</td><td>Shared instinct loops</td></tr>
+              <tr><td>Artist-days</td><td class="n">7–10</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LANGUAGE ============ -->
+<section id="language">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="plate">05 / Language</div>
+      <div>
+        <h2>What it's written in, and how it talks</h2>
+        <p>Two different questions with the same answer shape: pick the boring option for the machine, spend all the risk budget on the voice.</p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="plate eyebrow">Code</div>
+      <div class="col prose">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Layer</th><th>Language / format</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td>Gameplay &amp; systems</td><td><b>C#</b> (Unity 6)</td><td>One language across PC, Mac, Quest. Deep tooling, large hireable pool.</td></tr>
+              <tr><td>Puzzle definitions</td><td><b>Data, not code</b> — ScriptableObjects, JSON-exportable</td><td>Writers author doors without an engineer. Lets the solver run in CI.</td></tr>
+              <tr><td>Dialogue &amp; barks</td><td><b>Ink</b> (inkle)</td><td>Branching text as plain files, diffable, writer-editable, free runtime.</td></tr>
+              <tr><td>Editor tooling &amp; CI</td><td><b>C#</b> editor windows + <b>Python</b> for pipelines</td><td>Validator, loc export, build matrix, Steam upload.</td></tr>
+              <tr><td>Shaders</td><td><b>Shader Graph</b>, HLSL where needed</td><td>Mobile-safe variants for Quest come free.</td></tr>
+              <tr><td>Save &amp; unlock state</td><td><b>JSON + HMAC</b>, Steam Cloud</td><td>Readable for support, signed so the gate isn't a text edit.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>The voice</h3>
+        <p>Target: a clever 12-year-old and the adult who bought it for them should laugh at different lines in the same sentence. That means <b>dry understatement and bureaucratic deadpan</b>, not gag density — and it means the jokes come from the mythology colliding with modern process, which never stops being funny and never needs a trademark.</p>
+
+        <h4>Pop-culture references without the rot</h4>
+        <p>Dated references and legal exposure are the same problem with the same fix: <b>reference the archetype, never the property</b>.</p>
+        <ul>
+          <li>Not a named franchise — "the wizard school with the appalling staircase safety record".</li>
+          <li>Not a named platform — "a streaming service that cancelled the saga after two seasons".</li>
+          <li>Evergreen over current: office life, group chats, terms and conditions, IKEA-shaped flat-pack instructions, customer support, HR.</li>
+          <li><b>All of it in optional barks.</b> Jokes live in idle lines, object inspections and Hasp's commentary — never in rules text, never required to solve. One flag turns the humour density down for localisation or for a classroom build.</li>
+        </ul>
+        <div class="callout">
+          <p><b>The hard content rule for 12+:</b> comedy of inconvenience, never cruelty. Fenrir gets bound with paperwork; the wolf gets evicted, not skinned. Fairy tales are the source of the darkest material here, so pick the versions where the punishment is bureaucratic.</p>
+        </div>
+
+        <h3>Localisation</h3>
+        <p>Budget transcreation, not translation — a translator paid per word will flatten every joke in the game. Brief them to re-write the gag for the locale, keep the rule text literal.</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Wave</th><th>Languages</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td>Ship</td><td>EN, DE, FR, ES, PT-BR, ZH-Hans</td><td>Covers ~80% of Steam puzzle revenue.</td></tr>
+              <tr><td>+60 days</td><td>JA, KO, PL, RU, IT</td><td>JA and PL over-index on story puzzlers.</td></tr>
+              <tr><td>Voice</td><td>EN full for Hasp, subtitles elsewhere</td><td>One VO contract instead of ten. ~4,000 lines.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Two structural requirements, enforced by the validator: rule text uses a restricted vocabulary of ~60 property and verb terms, and <b>no puzzle resolves on wordplay</b> unless the door ships a per-locale variant beat. Word count estimate: 55–70k words total, of which ~40% is skippable humour.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOLING ============ -->
+<section id="tooling">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="plate">06 / Tooling</div>
+      <div>
+        <h2>Unity 6, and why not the others</h2>
+        <p>The deciding constraint is not graphics. It is one small team shipping Windows, macOS and Quest from one codebase, with a Mac editor that actually works.</p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="plate eyebrow">Engine</div>
+      <div class="col prose">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Engine</th><th>Verdict</th><th>Reasoning</th></tr></thead>
+            <tbody>
+              <tr><td><b>Unity 6 LTS + URP</b></td><td><span class="pill pick">Pick</span></td><td>Best Quest pipeline by a wide margin, first-class Apple Silicon editor and build, mature XR Interaction Toolkit, Steamworks.NET, Addressables for per-door content. C# everywhere.</td></tr>
+              <tr><td>Unreal 5</td><td><span class="pill no">No</span></td><td>Stronger renderer you don't need for baked dioramas; Mac editor and Quest performance work are both uphill; heavier for 24 tiny levels.</td></tr>
+              <tr><td>Godot 4</td><td><span class="pill maybe">If no VR</span></td><td>Lovely for the PC/Mac build and free, but Quest via OpenXR is still the rough edge, and that is half the product.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Pipeline</h4>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Need</th><th>Tool</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td>Modelling / rigging</td><td>Blender</td><td>Free, Mac-native, glTF straight into Unity.</td></tr>
+              <tr><td>Texturing</td><td>Substance Painter, or Blender for the kit</td><td>Shared trim sheets per world keep draw calls low.</td></tr>
+              <tr><td>Door authoring</td><td><b>In-house Door Editor</b></td><td>Graph view of objects, properties and rules, with the BFS solver live in the panel. The single most valuable thing you build.</td></tr>
+              <tr><td>Dialogue</td><td>Ink + Inky</td><td>Writer works in a text editor, not the engine.</td></tr>
+              <tr><td>Audio</td><td>FMOD Studio</td><td>Per-world mix snapshots; Quest-friendly footprint.</td></tr>
+              <tr><td>Localisation</td><td>Unity Localization + XLIFF round-trip</td><td>Python script exports, imports, flags untranslated.</td></tr>
+              <tr><td>Version control</td><td>Git + LFS</td><td>Plastic only if the art team asks for it.</td></tr>
+              <tr><td>CI</td><td>GitHub Actions + Unity build matrix</td><td>Nightly Win / macOS (notarised, universal) / Quest APK, validator gates the build.</td></tr>
+              <tr><td>Store</td><td>Steamworks.NET, Horizon Store later</td><td>Achievements per door, Steam Cloud, Playtest, Next Fest.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Platform specifics worth planning now</h4>
+        <ul>
+          <li><b>macOS:</b> universal binary, hardened runtime, notarised in CI from day one. Retrofitting notarisation two weeks before launch is a classic self-inflicted wound.</li>
+          <li><b>Quest 2 floor:</b> 72 fps, &lt;90k tris and &lt;1 ms CPU per diorama, fixed foveated rendering, everything baked. Design the budget on Quest 2 and Quest 3 is free.</li>
+          <li><b>Input abstraction from the first commit:</b> every interaction is <i>select a property, select a destination</i>. Mouse, gamepad and hand-tracking all feed that one interface. Do this early or pay for it twice.</li>
+          <li><b>Press and accessibility builds:</b> a launch argument that opens all 24 doors, because reviewers will not play twelve hours before writing.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GATING ============ -->
+<section id="gating">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="plate">07 / Gating</div>
+      <div>
+        <h2>Locks, dates, and the skeleton key</h2>
+        <p>The daily gate is the hook and the biggest review risk in the design. Gate on <i>solving</i>, offer dates as a mode, and make the cheat code a first-class feature instead of an apology.</p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="plate eyebrow">Rules</div>
+      <div class="col prose">
+        <ul>
+          <li><b>Default: progression gate.</b> Door N+1 opens when Door N is solved. Buy it in March, play it in March. This is the gate that ships on.</li>
+          <li><b>Optional: Calendar mode.</b> On during December, off by default outside it — one door per real day, Hasp doing a daily cold open. This is the thing that makes it a <i>calendar</i>, so make it an opt-in ritual, not a wall.</li>
+          <li><b>Clock protection, not clock policing.</b> Store the highest date ever seen and prefer Steam's server time when online, so setting the system clock forward just quietly does nothing. Never block a player who is offline or travelling.</li>
+          <li><b>Hasp's skip</b> (20-minute hint ladder) means nobody is ever truly stuck behind a door.</li>
+        </ul>
+
+        <h4>Cheat codes — typed on the brass plate of the lid</h4>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Code</th><th>Effect</th><th>Hasp</th></tr></thead>
+            <tbody>
+              <tr><td><kbd>SKELETON</kbd></td><td>Opens the next door only</td><td>Sighs. Opens it. Notes the time.</td></tr>
+              <tr><td><kbd>LOCKSMITH</kbd></td><td>Opens all 24 doors permanently</td><td>Files a formal grievance. Achievement: <i>Technically Cheating</i>.</td></tr>
+              <tr><td><kbd>HASPHASP</kbd></td><td>Developer commentary track on</td><td>Delighted. Will not stop talking.</td></tr>
+              <tr><td><kbd>--unlock-all</kbd></td><td>Launch argument, same as LOCKSMITH</td><td>Silent. For press, QA and accessibility.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout">
+          <p><b>Design the cheat in, don't bolt it on.</b> Reward it with content rather than punishing it: every cheated door still counts for completion, and Hasp's escalating resentment is a real joke thread with a payoff on Door 24. Players who cheat ahead on day one still come back to solve the doors, because the solving is the game — but the ones who cannot get past Door 9 and have no key are the ones who refund.</p>
+        </div>
+
+        <h4>Store shape</h4>
+        <ul>
+          <li>Door 1 free as the demo, permanently — it is a complete 40-minute puzzle and the best sales pitch available.</li>
+          <li>One achievement per door plus four ★ gilt achievements, so the achievement list is itself the calendar.</li>
+          <li>Launch mid-November so December's calendar window and the winter sale both land, with a Next Fest demo in October.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCOPE ============ -->
+<section id="scope">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="plate">08 / Scope</div>
+      <div>
+        <h2>The honest arithmetic</h2>
+        <p>"A few hours each, twenty-four days" is a 60–70 hour puzzle game. That is a bigger game than most puzzle studios ship in three years, so here is the real shape of it.</p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="plate eyebrow">Reality</div>
+      <div class="col prose">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Plan</th><th>Content</th><th>Team</th><th>Calendar</th><th>Rough cost</th></tr></thead>
+            <tbody>
+              <tr><td><b>Full 24 doors</b><br>as briefed, 3 h each</td><td class="n">~65 h</td><td class="n">6–8</td><td class="n">30–36 mo</td><td class="n">$900k–1.4M</td></tr>
+              <tr><td><b>24 doors, tuned</b><br>45–90 min core + ★ beats</td><td class="n">~30 h</td><td class="n">5–6</td><td class="n">20–24 mo</td><td class="n">$550k–800k</td></tr>
+              <tr><td><b>Season 1 — recommended</b><br>12 doors, 3 full world cycles</td><td class="n">~15 h</td><td class="n">4–5</td><td class="n">11–13 mo</td><td class="n">$280k–400k</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout">
+          <p><b>Recommendation:</b> ship <b>Season 1, twelve doors, PC and Mac</b>. Twelve doors is still an advent calendar (a half calendar is a known format), it proves the one verb across all four worlds three times over, and it gets the Door Editor and the VR input abstraction built and paid for. Quest port next, Season 2 the following November — at which point the second twelve doors cost roughly 40% of the first twelve because every tool and kit already exists.</p>
+          <p>The thing that kills this project if you let it: <b>24 bespoke mechanics</b>. One verb, four readers, machine-verified beats. That is the whole production strategy.</p>
+        </div>
+
+        <h4>Where the risk actually sits</h4>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr></thead>
+            <tbody>
+              <tr><td>Daily gate frustrates players into refunds</td><td><span class="pill no">High</span></td><td>Hint ladder, progression gate by default, cheat codes documented in-game.</td></tr>
+              <tr><td>Puzzle authoring slower than modelled</td><td><span class="pill no">High</span></td><td>Door Editor + solver before Door 2. Build the tool, not the content, in month one.</td></tr>
+              <tr><td>Humour doesn't survive localisation</td><td><span class="pill maybe">Medium</span></td><td>Jokes isolated to barks; transcreation budget; restricted rule vocabulary.</td></tr>
+              <tr><td>VR port turns into a second game</td><td><span class="pill maybe">Medium</span></td><td>Diorama framing and one input interface from the first commit.</td></tr>
+              <tr><td>Four worlds read as four art styles</td><td><span class="pill maybe">Medium</span></td><td>Shared prop kit, palette-driven identity, one lighting recipe.</td></tr>
+              <tr><td>Myth/fairy-tale rights</td><td><span class="pill pick">Low</span></td><td>All four sources are public domain. Keep parody to archetypes, never named properties.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>First 90 days</h4>
+        <ol>
+          <li><b>Weeks 1–4:</b> Door Editor skeleton and the BFS validator. Prove the pipeline on paper puzzles with placeholder cubes.</li>
+          <li><b>Weeks 5–8:</b> Door 1 vertical slice, art-complete, PC + Mac, playable on Quest with programmer hands.</li>
+          <li><b>Weeks 9–12:</b> Doors 2–4 — one per world — to prove the four readers. Then playtest Door 1 with twelve 11–14 year olds and watch where they stop reading.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Twenty-Four Doors</b> — concept bible, draft 1. Everything here is a starting position, not a finding: the door list, the cost bands and the schedule are informed estimates to argue with, and the Door 1 demo above is a design sketch rather than shipped code.</p>
+    <p>Next decisions, in order: season length, engine sign-off, and whether Calendar mode is on or off by default in December.</p>
+  </div>
+</footer>
+
+<script>
+/* ---------------- calendar lid ---------------- */
+const W = {
+  norse:{name:"Norse myth", v:"var(--norse)"},
+  nights:{name:"1001 Nights", v:"var(--nights)"},
+  fairy:{name:"Fairy tales", v:"var(--fairy)"},
+  animal:{name:"Animal kingdom", v:"var(--animal)"}
+};
+const DOORS = [
+  {n:1,w:"norse",t:"Ratatoskr Delivers",h:"A squirrel courier, one rude message, and a tree with a dragon at the bottom. The tutorial door: teaches Borrow &amp; Lend and nothing else.",m:"Borrow & Lend",min:40},
+  {n:2,w:"nights",t:"Three Wishes, Two Lawyers",h:"A djinn who grants exactly what you say. Find the loophole in your own wording before the contract closes.",m:"Wishes",min:55},
+  {n:3,w:"fairy",t:"Three Pigs, One Permit",h:"Building codes versus wolf aerodynamics. The posted rule is the planning regulation, and it is enforceable.",m:"Posted Rule",min:55},
+  {n:4,w:"animal",t:"Wolf, Goat, Cabbage, Lawyer",h:"The river crossing you know, except you cannot give orders — only edit what each animal's instinct notices.",m:"Instinct",min:60},
+  {n:5,w:"norse",t:"Mjölnir Is Missing",h:"The prophecy says the bride shall lift the hammer. Nobody said which bride, and Thor has a veil now.",m:"Prophecy Board",min:70},
+  {n:6,w:"nights",t:"The Forty Thieves' HR Problem",h:"Forty alibis, one password, and a cave that takes attendance. Deduction with a payroll department.",m:"Wishes + deduction",min:70},
+  {n:7,w:"fairy",t:"The Goldilocks Audit",h:"Everything must be just right, and 'right' is defined relative to things you can move. Comparison logic.",m:"Posted Rule",min:65},
+  {n:8,w:"animal",t:"Octopus Escape Room",h:"Eight arms, eight things happening at once. The first door that asks you to plan parallel actions.",m:"Instinct · parallel",min:75},
+  {n:9,w:"norse",t:"Fenrir's Leash",h:"Build an unbreakable chain out of impossible materials: the sound of a cat's footfall, the roots of a mountain, receipts.",m:"Properties from absence",min:80},
+  {n:10,w:"nights",t:"Carpet Pooling",h:"Flying carpet traffic control over a city with altitude rules, weight limits and a tailwind.",m:"Routing",min:75},
+  {n:11,w:"fairy",t:"Rumpelstiltskin's NDA",h:"Guess the name in three tries. Everything in the diorama is evidence, and the contract is readable.",m:"Deduction",min:70},
+  {n:12,w:"animal",t:"The Great Migration",h:"Ten thousand birds, one flyway, four things that want to eat them. Flow and timing without a stopwatch.",m:"Instinct · flow",min:80},
+  {n:13,w:"norse",t:"The Mead Heist",h:"Three vats, one very long straw, and a prophecy that specifies who drinks last. Ordering puzzle.",m:"Prophecy · ordering",min:85},
+  {n:14,w:"nights",t:"Sinbad's Insurance Claim",h:"Six contradictory witness statements to one voyage. Change one event so every statement becomes true.",m:"Wishes · consistency",min:85},
+  {n:15,w:"fairy",t:"Beanstalk Zoning",h:"A vertical diorama. Lend height, borrow weight, and keep the giant's floor from arriving in your kitchen.",m:"Rule · vertical",min:80},
+  {n:16,w:"animal",t:"Beaver Union Local 7",h:"Water flow, dam engineering and a labour dispute. The only door where the solution is civil engineering.",m:"Instinct · flow",min:85},
+  {n:17,w:"norse",t:"Hel Desk",h:"The underworld's complaints department. Sort arrivals by rules that contradict each other. Pure logic grid.",m:"Prophecy · constraint",min:90},
+  {n:18,w:"nights",t:"The Lamp Factory",h:"Mass-produce djinn on an assembly line where each one inherits the properties of the last. Compounding logic.",m:"Wishes · chains",min:90},
+  {n:19,w:"fairy",t:"Red Riding Hood, Forensics",h:"Everyone is wearing somebody else's properties. Work out who is actually who before dinner.",m:"Rule · identity",min:85},
+  {n:20,w:"animal",t:"Crow Vending Machine",h:"Teach a very clever bird a seven-step tool chain by making each step the obvious next instinct.",m:"Instinct · chains",min:90},
+  {n:21,w:"norse",t:"Ragnarök Rehearsal",h:"Stage the end of the world so the prophecy is satisfied and the world is, technically, still there.",m:"All four, braided",min:110},
+  {n:22,w:"nights",t:"Scheherazade's Deadline",h:"You must not finish the story. Keep the cliffhanger alive while every system tries to resolve it.",m:"All four, braided",min:110},
+  {n:23,w:"fairy",t:"Sleeping Beauty's Alarm",h:"A hundred years is a property, and you can lend it. The most unhinged clock in the game.",m:"All four, braided",min:110},
+  {n:24,w:"animal",t:"The Ark Audit",h:"Finale. Every world's cast in one diorama, every system running at once, and the truth about who filed the stories.",m:"Everything",min:160,fin:true}
+];
+const grid = document.getElementById("doors");
+const reveal = document.getElementById("reveal");
+
+DOORS.forEach(d => {
+  const b = document.createElement("button");
+  b.className = "door";
+  b.style.setProperty("--w", W[d.w].v);
+  b.setAttribute("aria-pressed","false");
+  if (d.fin) b.setAttribute("data-fin","1");
+  b.innerHTML = '<span class="num">' + d.n + '</span><span class="tag">' + W[d.w].name.split(" ")[0] + '</span>';
+  b.addEventListener("click", () => show(d, b));
+  grid.appendChild(b);
+});
+
+function show(d, btn){
+  grid.querySelectorAll(".door").forEach(x => x.setAttribute("aria-pressed","false"));
+  btn.setAttribute("aria-pressed","true");
+  reveal.style.setProperty("--w", W[d.w].v);
+  reveal.innerHTML =
+    '<div class="world">Door ' + d.n + ' · ' + W[d.w].name + '</div>' +
+    '<h3>' + d.t + '</h3>' +
+    '<p>' + d.h + '</p>' +
+    '<div class="meta"><span class="chip">Mechanic <b>' + d.m + '</b></span>' +
+    '<span class="chip">Core <b>' + d.min + ' min</b></span>' +
+    (d.fin ? '<span class="chip">★ <b>Finale</b></span>' : '<span class="chip">★ <b>+1 gilt beat</b></span>') +
+    '</div>';
+}
+show(DOORS[0], grid.firstElementChild);
+
+/* ---------------- Door 1 demo ---------------- */
+const THINGS = [
+  {id:"note",   name:"Rude Note",   note:"must climb"},
+  {id:"feather",name:"Hawk Feather",note:"cannot hold LOUD"},
+  {id:"acorn",  name:"Stone Acorn", note:"heavy as sin"},
+  {id:"mush",   name:"Mushroom",    note:"guard sleeps here"}
+];
+const START = {note:"LOUD", feather:"FLIGHT", acorn:"HEAVY", mush:null};
+let state, held, moves, solved;
+
+const thingsEl = document.getElementById("things");
+const sayEl = document.getElementById("say");
+const movesEl = document.getElementById("moves");
+
+function speak(msg, win){
+  sayEl.textContent = msg;
+  sayEl.classList.toggle("win", !!win);
+}
+
+function reset(){
+  state = Object.assign({}, START);
+  held = null; moves = 0; solved = false;
+  movesEl.textContent = "Moves: 0";
+  speak("Hasp, Senior Door, forty years' service. Move the words around. I'll tell you when you've embarrassed yourself.");
+  render();
+}
+
+function render(){
+  thingsEl.innerHTML = "";
+  THINGS.forEach(t => {
+    const box = document.createElement("div");
+    box.className = "thing" + (t.id === "note" ? " target" : "");
+    const prop = state[t.id];
+    let slot;
+    if (prop){
+      const pressed = held === t.id;
+      slot = '<div class="slot"><button class="prop p-' + prop + '" aria-pressed="' + pressed + '">' +
+             '<span>' + prop + '</span></button></div>';
+    } else {
+      slot = '<div class="slot' + (held ? " open" : "") + '">' +
+             (held ? '<button class="place">lend here</button>' : '') + '</div>';
+    }
+    box.innerHTML = '<div class="name">' + t.name + '</div><div class="note">' + t.note + '</div>' + slot;
+    const btn = box.querySelector("button");
+    if (btn) btn.addEventListener("click", () => prop ? pick(t.id) : drop(t.id));
+    thingsEl.appendChild(box);
+  });
+}
+
+function pick(id){
+  if (solved) return;
+  held = (held === id) ? null : id;
+  if (held) speak("Holding " + state[id] + ". Now find it a new home.");
+  render();
+}
+
+function drop(id){
+  if (solved || !held) return;
+  const prop = state[held];
+  if (id === "mush" && prop === "LOUD"){
+    speak("Rule two. You want to put a shout next to a sleeping guard. Try reading the sign.");
+    return;
+  }
+  if (id === "feather" && prop === "LOUD"){
+    speak("Rule three. A feather cannot carry a voice. It can barely carry itself.");
+    return;
+  }
+  state[id] = prop;
+  state[held] = null;
+  held = null;
+  moves++;
+  movesEl.textContent = "Moves: " + moves;
+  if (state.note === "FLIGHT"){
+    solved = true;
+    speak("The note goes up. Three moves — the minimum, which I will record accurately and mention never. Door one, beat one: filed.", true);
+  } else {
+    speak("Done. " + (moves > 3 ? "Though a tidier Keyholder would have taken three." : "Keep going."));
+  }
+  render();
+}
+
+document.getElementById("reset").addEventListener("click", reset);
+document.getElementById("hint").addEventListener("click", () => {
+  if (solved){ speak("It's solved. I'm a lock, not a conversationalist.", true); return; }
+  if (state.note === "LOUD" && state.acorn === "HEAVY" && state.mush === null)
+    speak("The LOUD has to leave the note, and only the acorn can take it. The acorn is full. So: empty the acorn first. The mushroom will hold anything that isn't a shout.");
+  else if (state.note === "LOUD")
+    speak("Move the LOUD to the acorn. Then the note has room for FLIGHT.");
+  else
+    speak("The feather is holding the only FLIGHT in the diorama. The note is empty. I'm not going to say it more plainly than that.");
+});
+
+reset();
+</script>

@@ -1,0 +1,13 @@
+wintergate-unity-prototype/Wintergate
+wintergate-unity-prototype/wintergate.app
+wintergate-unity-prototype/Library
+.utmp/
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+MemoryCaptures/
+.DS_Store

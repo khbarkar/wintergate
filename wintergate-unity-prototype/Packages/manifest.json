@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "com.unity.purchasing": "5.4.4",
+    "com.unity.services.cloud-build": "2.1.0",
+    "com.unity.ugui": "2.6.0",
+    "com.unity.xr.management": "4.7.0",
+    "com.unity.xr.oculus": "4.5.5",
+    "com.unity.xr.openxr": "1.16.1",
+    "com.unity.modules.adaptiveperformance": "1.0.0",
+    "com.unity.modules.androidjni": "1.0.0",
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.ui": "1.0.0",
+    "com.unity.modules.vectorgraphics": "1.0.0",
+    "com.unity.modules.xr": "1.0.0"
+  }
+}
